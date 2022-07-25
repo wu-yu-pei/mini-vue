@@ -1,7 +1,11 @@
+import { extend } from '../shared';
+
 class ReactiveEffect {
   private _fn: any;
   public scheduler: any;
-  public deps = [];
+  deps = [];
+  active = true;
+  onStop?: () => void;
   constructor(fn, scheduler?) {
     this._fn = fn;
     this.scheduler = scheduler;
@@ -13,10 +17,21 @@ class ReactiveEffect {
   }
 
   stop() {
-    this.deps.forEach((dep: any) => {
-      dep.delete(this);
-    });
+    if (this.active) {
+      clearUpEffect(this);
+      if (this.onStop) {
+        this.onStop();
+      }
+      this.active = false;
+    }
   }
+}
+
+// 清楚effect
+function clearUpEffect(effect) {
+  effect.deps.forEach((dep: any) => {
+    dep.delete(effect);
+  });
 }
 
 const targetMap = new Map();
@@ -33,9 +48,9 @@ export function track(target, key) {
     dep = new Set();
     deps.set(key, dep);
   }
+  if (!acctiveEffect) return;
   dep.add(acctiveEffect);
-  // todo 好像有一个bug
-  acctiveEffect && acctiveEffect.deps.push(dep);
+  acctiveEffect.deps.push(dep);
 }
 
 // 依赖触发
@@ -60,6 +75,10 @@ export function stop(runner) {
 export function effect(fn, options: any = {}) {
   // 调用fn
   const _effect = new ReactiveEffect(fn, options.scheduler);
+
+  // 优化
+  // _effect.onStop = options.onStop;
+  extend(_effect, options);
 
   _effect.run();
 
