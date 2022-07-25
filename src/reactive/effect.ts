@@ -1,5 +1,8 @@
 import { extend } from '../shared';
 
+let acctiveEffect;
+let shouldTrack;
+
 class ReactiveEffect {
   private _fn: any;
   public scheduler: any;
@@ -12,8 +15,14 @@ class ReactiveEffect {
   }
 
   run() {
+    if (!this.active) {
+      return this._fn();
+    }
+    shouldTrack = true;
     acctiveEffect = this;
-    return this._fn();
+    const result = this._fn();
+    shouldTrack = false;
+    return result;
   }
 
   stop() {
@@ -66,7 +75,6 @@ export function trigger(target, key) {
     }
   }
 }
-let acctiveEffect;
 
 export function stop(runner) {
   runner.effect.stop();
