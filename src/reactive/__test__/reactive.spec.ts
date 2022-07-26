@@ -1,4 +1,4 @@
-import { reactive, isReactive } from '../reactive';
+import { reactive, isReactive, readonly, isProxy } from '../reactive';
 
 describe('reactive', () => {
   it('happy path', () => {
@@ -27,5 +27,15 @@ describe('reactive', () => {
     expect(isReactive(nPerson.firends[0])).toBe(true);
     expect(isReactive(nPerson.dog)).toBe(true);
     expect(isReactive(nPerson.firends)).toBe(true);
+  });
+
+  it('is Proxy', () => {
+    const o = {
+      name: 'wuyupei',
+    };
+    const n = reactive(o);
+    const nTwo = readonly(o);
+    expect(isProxy(n)).toBe(true);
+    expect(isProxy(n)).toBe(true);
   });
 });
