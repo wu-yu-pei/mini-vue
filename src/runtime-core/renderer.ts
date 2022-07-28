@@ -33,7 +33,11 @@ function mountElement(vnode: any, container: any) {
   // 2.处理子元素
   // 2.1 text
   const { children } = vnode;
-  el.textContent = children;
+  if (typeof children === 'string') {
+    el.textContent = children;
+  } else if (Array.isArray(children)) {
+    mountChildren(vnode, el);
+  }
 
   // 处理props
   const { props } = vnode;
@@ -50,6 +54,12 @@ function mountComponent(vnode, container) {
   const instance = createComponentInstance(vnode);
   setupComponent(instance);
   setupRenderEffect(instance, container);
+}
+
+function mountChildren(vnode, container) {
+  vnode.children.forEach((v) => {
+    patch(v, container);
+  });
 }
 
 function setupRenderEffect(instance, container) {
