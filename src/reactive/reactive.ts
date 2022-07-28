@@ -1,4 +1,4 @@
-import { mutableHandlers, readonlyHandlers } from './basehandler';
+import { mutableHandlers, readonlyHandlers } from './baseHandler';
 
 export const enum ReactiveFlag {
   IS_REACTIVE = '__v-isReactive',
