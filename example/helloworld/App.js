@@ -3,7 +3,13 @@ console.log(111);
 const App = {
   // .vue 文件会编译成这个样
   render() {
-    return h('div', 'Hi,' + this.msg);
+    return h(
+      'div',
+      {
+        class: 'red',
+      },
+      'Hi,' + this.msg
+    );
   },
   setup() {
     return {
