@@ -50,10 +50,10 @@ function mountElement(vnode: any, container: any) {
   container.append(el);
 }
 
-function mountComponent(vnode, container) {
-  const instance = createComponentInstance(vnode);
+function mountComponent(initialVNode, container) {
+  const instance = createComponentInstance(initialVNode);
   setupComponent(instance);
-  setupRenderEffect(instance, vnode, container);
+  setupRenderEffect(instance, initialVNode, container);
 }
 
 function mountChildren(vnode, container) {
@@ -62,7 +62,7 @@ function mountChildren(vnode, container) {
   });
 }
 
-function setupRenderEffect(instance, vnode, container) {
+function setupRenderEffect(instance, initialVNode, container) {
   const { proxy } = instance;
   const subTree = instance.render.call(proxy);
 
@@ -70,5 +70,5 @@ function setupRenderEffect(instance, vnode, container) {
   // vnode --> element --> mount
   patch(subTree, container);
 
-  vnode.el = subTree.el;
+  initialVNode.el = subTree.el;
 }
