@@ -28,7 +28,7 @@ function processComponent(vnode, container) {
 
 function mountElement(vnode: any, container: any) {
   // 1.创建元素
-  const el = document.createElement(vnode.type);
+  const el = (vnode.el = document.createElement(vnode.type));
 
   // 2.处理子元素
   // 2.1 text
@@ -53,7 +53,7 @@ function mountElement(vnode: any, container: any) {
 function mountComponent(vnode, container) {
   const instance = createComponentInstance(vnode);
   setupComponent(instance);
-  setupRenderEffect(instance, container);
+  setupRenderEffect(instance, vnode, container);
 }
 
 function mountChildren(vnode, container) {
@@ -62,10 +62,13 @@ function mountChildren(vnode, container) {
   });
 }
 
-function setupRenderEffect(instance, container) {
-  const subTree = instance.render();
+function setupRenderEffect(instance, vnode, container) {
+  const { proxy } = instance;
+  const subTree = instance.render.call(proxy);
 
   // vnode
   // vnode --> element --> mount
   patch(subTree, container);
+
+  vnode.el = subTree.el;
 }
