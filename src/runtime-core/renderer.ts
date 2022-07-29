@@ -1,4 +1,4 @@
-import { isObject } from '../shared/index';
+import { ShapeFlags } from '../shared/shapeFlags';
 import { createComponentInstance, setupComponent } from './component';
 
 export function render(vnode, container) {
@@ -7,11 +7,20 @@ export function render(vnode, container) {
 }
 
 function patch(vnode, container) {
-  if (typeof vnode.type === 'string') {
-    // 1.processElement
+  const { shapeFlags } = vnode;
+
+  // if (typeof vnode.type === 'string') {
+  //   // 1.processElement
+  //   processElement(vnode, container);
+  // } else if (isObject(vnode.type)) {
+  //   // 2. 去处理组件
+  //   processComponent(vnode, container);
+  // }
+
+  // 优化为位运算 & 同为1才为1 | 同为0才为0
+  if (shapeFlags & ShapeFlags.ELEMENT) {
     processElement(vnode, container);
-  } else if (isObject(vnode.type)) {
-    // 2. 去处理组件
+  } else if (shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
     processComponent(vnode, container);
   }
 }
@@ -32,10 +41,17 @@ function mountElement(vnode: any, container: any) {
 
   // 2.处理子元素
   // 2.1 text
-  const { children } = vnode;
-  if (typeof children === 'string') {
+  // const { children } = vnode;
+  // if (typeof children === 'string') {
+  //   el.textContent = children;
+  // } else if (Array.isArray(children)) {
+  //   mountChildren(vnode, el);
+  // }
+  // 优化为位运算
+  const { children, shapeFlags } = vnode;
+  if (shapeFlags & ShapeFlags.TEXT_CHILDREN) {
     el.textContent = children;
-  } else if (Array.isArray(children)) {
+  } else if (shapeFlags & ShapeFlags.ARRAY_CHILDREN) {
     mountChildren(vnode, el);
   }
 
