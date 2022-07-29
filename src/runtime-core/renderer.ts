@@ -1,3 +1,4 @@
+import { isOn } from '../shared/index';
 import { ShapeFlags } from '../shared/shapeFlags';
 import { createComponentInstance, setupComponent } from './component';
 
@@ -59,7 +60,13 @@ function mountElement(vnode: any, container: any) {
   const { props } = vnode;
   for (const key in props) {
     const val = props[key];
-    el.setAttribute(key, val);
+    // 也可以使用正则
+    if (isOn(key)) {
+      const event = key.slice(2).toLocaleLowerCase();
+      el.addEventListener(event, val);
+    } else {
+      el.setAttribute(key, val);
+    }
   }
 
   // 挂载到容器

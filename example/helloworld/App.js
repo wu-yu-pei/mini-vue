@@ -9,6 +9,9 @@ const App = {
       {
         id: 'root',
         class: 'red',
+        onClick() {
+          console.log('click');
+        },
       },
       // 'hi,mini-vue'
       [h('p', { class: 'red' }, 'Hi'), h('p', { class: 'blue' }, 'mini-vue' + this.msg)]
