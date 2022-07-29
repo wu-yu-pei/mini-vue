@@ -1,4 +1,5 @@
-import { mutableHandlers, readonlyHandlers } from './baseHandler';
+import { isObject } from '../shared/index';
+import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from './baseHandler';
 
 export const enum ReactiveFlag {
   IS_REACTIVE = '__v-isReactive',
@@ -11,6 +12,10 @@ export function reactive(obj) {
 
 export function readonly(obj) {
   return createActiveObject(obj, readonlyHandlers);
+}
+
+export function shallowReadonley(obj) {
+  return createActiveObject(obj, shallowReadonlyHandlers);
 }
 
 export function isReactive(obj) {
@@ -26,5 +31,9 @@ export function isProxy(obj) {
 }
 
 function createActiveObject(obj, bashHandle) {
+  if (!isObject(obj)) {
+    console.log('不是一个对象');
+    return obj;
+  }
   return new Proxy(obj, bashHandle);
 }
