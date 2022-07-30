@@ -1,7 +1,9 @@
-export { createApp } from './createApp';
+export *  from './createApp';
 
-export { h } from './h';
+export * from './h';
 
-export { renderSlots } from './helpers/renderSlots';
+export * from './helpers/renderSlots';
 
-export { createTextVNode } from './vnode';
+export * from './vnode';
+
+export * from './component';
