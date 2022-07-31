@@ -3,7 +3,7 @@ import { createComponentInstance, setupComponent } from './component';
 import { createAppApi } from './createApp';
 import { Fragment, Text } from './vnode';
 
-export function createRender(options) {
+export function createRenderer(options) {
   const { createElement, patchProps, insert } = options;
   function render(vnode, container) {
     // patch方法

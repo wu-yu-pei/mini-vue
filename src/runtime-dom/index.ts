@@ -1,4 +1,4 @@
-import { createRender } from '../runtime-core';
+import { createRenderer } from '../runtime-core';
 import { isOn } from '../shared';
 
 export function createElement(type) {
@@ -19,7 +19,7 @@ export function insert(el, parent) {
   parent.append(el);
 }
 
-const renderer:any = createRender({ createElement, patchProps, insert });
+const renderer:any = createRenderer({ createElement, patchProps, insert });
 
 export function createApp(...args) {
   return renderer.createApp(...args);
